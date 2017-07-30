@@ -1,5 +1,5 @@
 # qiotd
-* Qiita (Qiita:Team) の n 年前の今日の記事を Slack の Incoming webhook へ  post するコマンドです。
+* Qiita:Team (Qiita) の n 年前の今日の記事を Slack の Incoming webhook へ post するコマンドです。
 * Qiita:Team の過去記事を掘り起こすために作成したツールです。
 * `qiotd` = **Qi**ita **O**n **T**his **D**ay.
 
@@ -42,6 +42,9 @@ Usage of ./bin/qiotd:
     	Days (default: 1) (default 1)
   -v	prints current qiotd version
 ```
+
+## 実行例
+(coming soon)
 
 # 補足 - Qiita API の注意点
 ## 利用制限
