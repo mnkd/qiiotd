@@ -44,7 +44,7 @@ Usage of ./bin/qiotd:
 ```
 
 ## 実行例
-(coming soon)
+![slack](images/slack.png)
 
 # 補足 - Qiita API の注意点
 ## 利用制限
