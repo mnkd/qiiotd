@@ -50,7 +50,7 @@ func NewConfig(path string) (Config, error) {
 	}
 
 	if len(path) == 0 {
-		path = filepath.Join(usr.HomeDir, "/.config/qiotd/config.json")
+		path = filepath.Join(usr.HomeDir, "/.config/qiiotd/config.json")
 	} else {
 		p, err := filepath.Abs(path)
 		if err != nil {

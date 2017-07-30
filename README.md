@@ -1,11 +1,11 @@
-# qiotd
+# qiiotd
 * Qiita:Team (Qiita) の n 年前の今日の記事を Slack の Incoming webhook へ post するコマンドです。
 * Qiita:Team の過去記事を掘り起こすために作成したツールです。
-* `qiotd` = **Qi**ita **O**n **T**his **D**ay.
+* `qiiotd` = **Qii**ta **O**n **T**his **D**ay.
 
 ## インストール
 ```
-$ go get -u github.com/mnkd/qiotd
+$ go get -u github.com/mnkd/qiiotd
 ```
 
 ## ビルド
@@ -21,26 +21,26 @@ $ make linux
 
 ## 設定ファイル
 * `config.json.sample` を基に `config.json` を作成してください。
-* デフォルトのパスは `$HOME/.config/qiotd/config.json` です。
+* デフォルトのパスは `$HOME/.config/qiiotd/config.json` です。
 
 ## 使い方
 
 2 年前の今日の記事を Slack へ投稿する場合。
 
 ```
-$ qiotd -ago 2
+$ qiiotd -ago 2
 ```
 
 ### オプション
 ```
-Usage of ./bin/qiotd:
+Usage of ./bin/qiiotd:
   -ago int
     	Years ago (default: 1) (default 1)
   -c string
-    	/path/to/config.json (default: $HOME/.config/qiotd/config.json)
+    	/path/to/config.json (default: $HOME/.config/qiiotd/config.json)
   -days int
     	Days (default: 1) (default 1)
-  -v	prints current qiotd version
+  -v	prints current qiiotd version
 ```
 
 ## 実行例
