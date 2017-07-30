@@ -1,0 +1,16 @@
+{
+  "qiita": {
+    "domain": "qiita.com",
+    "access_token": "your access token",
+    "per_page": 5
+  },
+  "slack_webhooks": [
+      {
+        "team": "your-team",
+        "channel": "#your-channel",
+        "username": "Qiita:Team | On This Day",
+        "icon_emoji": ":smile:",
+        "webhook_url": "https://hooks.slack.com/services/XXXX/XXXX/XXXX"
+      }
+    ]
+}
