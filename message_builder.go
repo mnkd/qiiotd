@@ -12,16 +12,12 @@ type MessageBuilder struct {
 }
 
 func (builder MessageBuilder) BudildSummary(itemsCount int) string {
-	repo := "Qiita:Team"
-	url := "https://" + builder.QiitaDomain
-	link := fmt.Sprintf("<%s|%s>", url, repo)
-
 	var summary string
 	switch itemsCount {
 	case 0:
-		summary = fmt.Sprintf("%d 年前の今日の投稿はありません。%s", builder.YearsAgo, link)
+		summary = fmt.Sprintf("%d 年前の今日の投稿はありません。", builder.YearsAgo)
 	default:
-		summary = fmt.Sprintf("%d 年前の今日の投稿が %d 件みつかりました %s", builder.YearsAgo, itemsCount, link)
+		summary = fmt.Sprintf("%d 年前の今日の投稿が %d 件みつかりました。", builder.YearsAgo, itemsCount)
 	}
 	return summary
 }
