@@ -1,5 +1,5 @@
 NAME     := qiiotd
-VERSION  := 0.1.1
+VERSION  := 0.2.0
 REVISION := $(shell git rev-parse --short HEAD)
 SRCS    := $(shell find . -type f -name '*.go')
 LDFLAGS := -ldflags="-X \"main.Version=$(VERSION)\" -X \"main.Revision=$(REVISION)\""
