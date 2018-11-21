@@ -25,8 +25,10 @@ func (app App) prepareDate(yearsAgo int, days int) (string, string) {
 
 	now := time.Now()
 	jst := now.In(JST)
-	t1 := jst.AddDate(-yearsAgo, 0, 0) // a year ago
-	t2 := t1.AddDate(0, 0, days)       // next day
+
+	// e.g. now: 2018-11-21, t1: 2017-11-20, t2: 2017-11-22
+	t1 := jst.AddDate(-yearsAgo, 0, -1)
+	t2 := jst.AddDate(-yearsAgo, 0, 1)
 
 	return t1.Format("2006-01-02"), t2.Format("2006-01-02")
 }
