@@ -28,7 +28,7 @@ type QiitaItem struct {
 	} `json:"user"`
 }
 
-func (item QiitaItem) Time_CreatedAt() (time.Time, error) {
+func (item *QiitaItem) Time_CreatedAt() (time.Time, error) {
 	// "created_at": "2000-01-01T00:00:00+00:00",
 	jst, err := time.LoadLocation("Asia/Tokyo")
 	if err != nil {
@@ -45,7 +45,7 @@ func (item QiitaItem) Time_CreatedAt() (time.Time, error) {
 	return t.In(jst), nil
 }
 
-func (item QiitaItem) dateDescription() string {
+func (item *QiitaItem) dateDescription() string {
 	t, err := item.Time_CreatedAt()
 	if err != nil {
 		return ""
@@ -53,13 +53,17 @@ func (item QiitaItem) dateDescription() string {
 	return t.Format("2006-01-02")
 }
 
-func (qiita QiitaAPI) requestURLString(minDate string, maxDate string) string {
+func (item *QiitaItem) String() string {
+	return fmt.Sprintf("%v %v %v", item.Title, item.CreatedAt, item.URL)
+}
+
+func (qiita *QiitaAPI) requestURLString(minDate string, maxDate string) string {
 	baseURL := fmt.Sprintf("https://%s/api/v2/items", qiita.Domain)
 	query := fmt.Sprintf("created:>%s created:<%s", minDate, maxDate)
 
 	parameters := url.Values{}
 	parameters.Add("query", query)
-	parameters.Add("per_page", "20")
+	parameters.Add("per_page", "50")
 
 	queryString := strings.Replace(parameters.Encode(), "+", "%20", -1)
 	queryString = strings.Replace(queryString, ":", "%3A", -1)
@@ -67,21 +71,19 @@ func (qiita QiitaAPI) requestURLString(minDate string, maxDate string) string {
 	return baseURL + "?" + queryString
 }
 
-func (qiita QiitaAPI) Items(minDate string, maxDate string) ([]QiitaItem, error) {
+func (qiita *QiitaAPI) Items(minDate string, maxDate string) ([]*QiitaItem, error) {
 	url := qiita.requestURLString(minDate, maxDate)
 
 	// Prepare HTTP Request
 	request, err := http.NewRequest("GET", url, nil)
 	request.Header.Add("Authorization", "Bearer "+qiita.AccessToken)
 
-	var items []QiitaItem
-
 	// Fetch Request
 	client := &http.Client{}
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Qiita: <error> fetch stocks:", err)
-		return items, err
+		return nil, err
 	}
 
 	// Read Response Body
@@ -95,23 +97,25 @@ func (qiita QiitaAPI) Items(minDate string, maxDate string) ([]QiitaItem, error)
 	}
 
 	// Decode JSON
+	var items []*QiitaItem
 	if err := json.Unmarshal(responseBody, &items); err != nil {
 		fmt.Fprintln(os.Stderr, "Qiita: <error> json unmarshal:", err)
-		return items, err
+		return nil, err
 	}
 
 	return items, nil
 }
 
-func NewQiitaAPI(config Config) QiitaAPI {
-	qiita := QiitaAPI{}
-	qiita.Domain = config.Qiita.Domain
-	qiita.AccessToken = config.Qiita.AccessToken
-	qiita.PerPage = config.Qiita.PerPage
+func NewQiitaAPI(config Config) *QiitaAPI {
+	qiita := QiitaAPI{
+		Domain:      config.Qiita.Domain,
+		AccessToken: config.Qiita.AccessToken,
+		PerPage:     config.Qiita.PerPage,
+	}
 
 	if qiita.PerPage == 0 {
 		qiita.PerPage = 5
 	}
 
-	return qiita
+	return &qiita
 }

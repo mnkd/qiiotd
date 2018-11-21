@@ -16,13 +16,13 @@ var (
 	Revision string
 )
 
-var app = App{}
+var app *App
 
 func init() {
 	var version bool
 	var path string
-	var yearsAgo int
-	var days int
+	var yearsAgo, days int
+
 	flag.BoolVar(&version, "v", false, "prints current qiiotd version")
 	flag.StringVar(&path, "c", "", "/path/to/config.json (default: $HOME/.config/qiiotd/config.json)")
 	flag.IntVar(&yearsAgo, "ago", 1, "Years ago (default: 1)")

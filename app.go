@@ -5,18 +5,18 @@ import (
 	"os"
 	"time"
 
-	"github.com/mnkd/slackposter"
+	slackposter "github.com/mnkd/slackposter"
 )
 
 type App struct {
 	Config   Config
-	QiitaAPI QiitaAPI
-	Slack    slackposter.Slack
+	QiitaAPI *QiitaAPI
+	Slack    slackposter.SlackPoster
 	Days     int
 	YearsAgo int
 }
 
-func (app App) prepareDate(yearsAgo int, days int) (string, string) {
+func prepareDate(yearsAgo int, days int) (string, string) {
 	JST, err := time.LoadLocation("Asia/Tokyo")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "App: <error>: %v\n", err)
@@ -33,8 +33,8 @@ func (app App) prepareDate(yearsAgo int, days int) (string, string) {
 	return t1.Format("2006-01-02"), t2.Format("2006-01-02")
 }
 
-func (app App) fetchItems(yearsAgo int, days int) ([]QiitaItem, error) {
-	t1, t2 := app.prepareDate(yearsAgo, days)
+func (app *App) fetchItems(yearsAgo int, days int) ([]*QiitaItem, error) {
+	t1, t2 := prepareDate(yearsAgo, days)
 	items, err := app.QiitaAPI.Items(t1, t2)
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (app App) fetchItems(yearsAgo int, days int) ([]QiitaItem, error) {
 	return items, nil
 }
 
-func (app App) Run() int {
+func (app *App) Run() int {
 	fmt.Fprintf(os.Stdout, "fetch %v year ago...\n", app.YearsAgo)
 	items, err := app.fetchItems(app.YearsAgo, app.Days)
 	if err != nil {
@@ -50,7 +50,10 @@ func (app App) Run() int {
 		return ExitCodeError
 	}
 
-	fmt.Fprintf(os.Stdout, "len: %v\n", len(items))
+	fmt.Printf("len: %v\n", len(items))
+	for i, item := range items {
+		fmt.Printf("%d: %v\n", i, item)
+	}
 
 	var payload slackposter.Payload
 	payload.Channel = app.Slack.Channel
@@ -70,7 +73,7 @@ func (app App) Run() int {
 	var attachments []slackposter.Attachment
 	for _, item := range items {
 		fmt.Fprintln(os.Stdout, item.Title)
-		attachment := builder.BuildAttachment(item)
+		attachment := builder.BuildAttachment(*item)
 		attachments = append(attachments, attachment)
 	}
 	payload.Attachments = attachments
@@ -87,12 +90,12 @@ func (app App) Run() int {
 	return ExitCodeOK
 }
 
-func NewApp(config Config, yearsAgo int, days int) App {
-	var app = App{}
-	app.Config = config
-	app.QiitaAPI = NewQiitaAPI(config)
-	app.Slack = slackposter.NewSlack(config.SlackWebhooks[0])
-	app.Days = days
-	app.YearsAgo = yearsAgo
-	return app
+func NewApp(config Config, yearsAgo int, days int) *App {
+	return &App{
+		Config:   config,
+		QiitaAPI: NewQiitaAPI(config),
+		Slack:    slackposter.NewSlackPoster(config.Slack),
+		Days:     days,
+		YearsAgo: yearsAgo,
+	}
 }

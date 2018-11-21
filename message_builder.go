@@ -11,7 +11,7 @@ type MessageBuilder struct {
 	YearsAgo    int
 }
 
-func (builder MessageBuilder) BudildSummary(itemsCount int) string {
+func (builder *MessageBuilder) BudildSummary(itemsCount int) string {
 	var summary string
 	switch itemsCount {
 	case 0:
@@ -22,11 +22,11 @@ func (builder MessageBuilder) BudildSummary(itemsCount int) string {
 	return summary
 }
 
-func (builder MessageBuilder) fallbackString(item QiitaItem) string {
+func (builder *MessageBuilder) fallbackString(item QiitaItem) string {
 	return fmt.Sprintf("<%s|%s>\nby %s", item.URL, item.Title, item.User.ID)
 }
 
-func (builder MessageBuilder) BuildAttachment(item QiitaItem) slackposter.Attachment {
+func (builder *MessageBuilder) BuildAttachment(item QiitaItem) slackposter.Attachment {
 	color := "#3287C8"
 	message := builder.fallbackString(item)
 
@@ -45,14 +45,14 @@ func (builder MessageBuilder) BuildAttachment(item QiitaItem) slackposter.Attach
 		TitleLink: item.URL,
 		Footer:    item.User.ID,
 		Ts:        timestamp,
-		ThumbUrl:  item.User.ProfileImageURL,
+		ThumbURL:  item.User.ProfileImageURL,
 		MrkdwnIn:  []string{"text", "fallback"},
 	}
 	return attachment
 }
 
-func NewMessageBuilder(domain string, yearsAgo int) MessageBuilder {
-	return MessageBuilder{
+func NewMessageBuilder(domain string, yearsAgo int) *MessageBuilder {
+	return &MessageBuilder{
 		QiitaDomain: domain,
 		YearsAgo:    yearsAgo,
 	}
