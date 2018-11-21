@@ -1,22 +1,22 @@
 NAME     := qiiotd
-VERSION  := 0.1.0
+VERSION  := 0.1.1
 REVISION := $(shell git rev-parse --short HEAD)
 SRCS    := $(shell find . -type f -name '*.go')
 LDFLAGS := -ldflags="-X \"main.Version=$(VERSION)\" -X \"main.Revision=$(REVISION)\""
 
 bin/$(NAME): $(SRCS) format
-	go build $(LDFLAGS) -o bin/$(NAME)
+	GO111MODULE=on go build $(LDFLAGS) -o bin/$(NAME)
 
 linux: $(SRCS) format
-	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o bin/$(NAME)
+	GO111MODULE=on GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o bin/$(NAME)
 
 format:
-	go fmt $(SRCS)
+	GO111MODULE=on go fmt $(SRCS)
 
 clean:
 	rm -rf bin/*
 
 install:
-	go install $(LDFLAGS)
+	GO111MODULE=on go install $(LDFLAGS)
 
 .PHONY: format, clean, install
