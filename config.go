@@ -20,12 +20,12 @@ type Config struct {
 		AccessToken string `json:"access_token"`
 		PerPage     int    `json:"per_page"`
 	} `json:"qiita"`
-	SlackWebhooks []struct {
+	Slack struct {
 		Channel    string `json:"channel"`
 		IconEmoji  string `json:"icon_emoji"`
 		Username   string `json:"username"`
-		WebhookUrl string `json:"webhook_url"`
-	} `json:"slack_webhooks"`
+		WebhookURL string `json:"webhook_url"`
+	} `json:"slack"`
 }
 
 func (c *Config) validate() error {
